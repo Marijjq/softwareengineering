@@ -15,7 +15,7 @@ use App\Http\Controllers\Backend\CartController;
 use App\Http\Controllers\Frontend\AuthorHomeController;
 use App\Http\Controllers\Frontend\UserAddressController;
 use App\Http\Controllers\Frontend\CheckOutController;
-use App\Http\Controllers\Backend\PaymentController;
+use App\Http\Controllers\Backend\StripeController;
 
 
 
@@ -60,6 +60,11 @@ Route::get('qty-decrement/{rowId}', [CartController::class, 'qtyDecrement'])->na
 Route::get('remove-book/{rowId}', [CartController::class, 'removeBook'])->name('remove-book');
 Route::get('/clear-cart', [CartController::class, 'clearCart'])->name('clear-cart');
 
+//stripe
+Route::post('stripe/payment', [StripeController::class, 'payment'])->name('stripe.payment');
+Route::get('stripe/success', [StripeController::class, 'success'])->name('stripe.success');
+Route::get('stripe/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
+
 
 
 Route::get('/category/{category}/books', [BookController::class, 'booksByCategory'])
@@ -74,8 +79,7 @@ Route::group(['middleware'=> ['auth', 'verified'], 'prefix' => 'user', 'as' => '
    //User Address
     Route::resource('address', UserAddressController::class);
     //Checkout 
-      Route::get('checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
-        Route::post('checkout/address', [CheckoutController::class, 'createAddress'])->name('checkout.address.create');
+    Route::get('checkout', [CheckoutController::class, 'checkout'])->name('checkout');
         //Route::post('checkout/form-submit', [CheckoutController::class, 'checkOutFormSubmit'])->name('checkout.form-submit');
         //Route::get('payment', [PaymentController::class, 'index'])->name('payment');
     

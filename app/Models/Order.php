@@ -9,5 +9,8 @@ class Order extends Model
 {
     use HasFactory;
     protected $primaryKey = 'orderId';
-
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetails::class);
+    }
 }

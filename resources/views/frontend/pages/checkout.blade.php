@@ -1,7 +1,7 @@
 @extends('frontend.layouts.master')
 
 @section('title')
-    <!-- Add your title here if needed -->
+    Checkout 
 @endsection
 
 @section('content')
@@ -39,54 +39,50 @@
                                 <h5>Shipping Details </h5>                            
                         </div>
                         <div class="wsus__check_form mt-3">
-                            <form action="{{ route('user.checkout.address.create') }}" method="POST">
-                                @csrf
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Name" name="name" value="{{ old('name') }}">
+                                            <input type="text" placeholder="Name" name="name" value="{{ old('name', $userAddress ? $userAddress->name : '') }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Phone *" name="phone" value="{{ old('phone') }}">
+                                            <input type="text" placeholder="Phone *" name="phone" value="{{ old('phone', $userAddress ? $userAddress->phone : '') }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="email" placeholder="Email *" name="email" value="{{ old('email') }}">
+                                            <input type="email" placeholder="Email *" name="email" value="{{ old('email', $userAddress ? $userAddress->email : '') }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Country *" name="country" value="{{ old('country') }}">
+                                            <input type="text" placeholder="Country *" name="country" value="{{ old('country', $userAddress ? $userAddress->country : '') }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="State" name="state" value="{{ old('state') }}">
+                                            <input type="text" placeholder="State" name="state" value="{{ old('state', $userAddress ? $userAddress->state : '') }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Town / City *" name="city" value="{{ old('city') }}">
+                                            <input type="text" placeholder="Town / City *" name="city" value="{{ old('city', $userAddress ? $userAddress->city : '') }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Zip *" name="zip" value="{{ old('zip') }}">
+                                            <input type="text" placeholder="Zip *" name="zip" value="{{ old('zip', $userAddress ? $userAddress->zip : '') }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Address *" name="address" value="{{ old('address') }}">
+                                            <input type="text" placeholder="Address *" name="address" value="{{ old('address', $userAddress ? $userAddress->address : '') }}">
                                         </div>
                                     </div>
                                    
-                                </div>
-                            </form>
-                        </div>
-                                      
+                                </div>                        
+                            </div>
                     </div>
                 </div>
 
@@ -95,26 +91,21 @@
                         <!-- Order Summary -->
                         <div class="wsus__order_details_summery">
                             <h6>Order Summary</h6>
-                            <p>Subtotal: <span>${{ Cart::subtotal() }}</span></p>
-                            <p>Delivery: <span>${{ Cart::tax() }}</span></p>
-                            <p><b>Total:</b> <span>${{ Cart::subtotal() + Cart::tax() }}</span></p>
-
-
+                            <p>Subtotal: <span>${{ number_format($subtotal, 2) }}</span></p>
+                            <p>Delivery: <span>${{ number_format($tax, 2) }}</span></p>
+                            <p><b>Total:</b> <span>${{ number_format($total, 2) }}</span></p>
                             <!-- Checkout Form -->
-                            <form action="" method="POST" id="CheckoutForm">
+                            <form action="{{ route('stripe.payment') }}" method="POST">
                                 @csrf
-                                <input type="hidden" name="shipping_address_id" value="" id="inputShippingAddressId">
+                                <!-- Include hidden input field for total price -->
+                                <input type="hidden" name="total" value="{{ $total }}">
+                                <!-- Other form fields -->
+                                <button type="submit" class="common_btn">Place Order</button>
                             </form>
-
-                            <!-- Place Order Button -->
-                            <a href="" id="submitCheckoutForm" class="common_btn">Place Order</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    
-
 @endsection

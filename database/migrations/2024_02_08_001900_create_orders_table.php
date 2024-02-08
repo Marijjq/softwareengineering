@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('books', function (Blueprint $table) {
-            $table->enum('status', ['available', 'unavailable'])->default('available');
-
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->integer('user_id')->unsigned()->index();
+            $table->string('payment_type')->nullable();
+            $table->double('total_price');
+            $table->timestamps();
         });
     }
 
@@ -22,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('books', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('orders');
     }
 };
